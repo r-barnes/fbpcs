@@ -49,6 +49,8 @@ jobs:
       num_mpc_containers: 1
       num_pid_containers: 1
       concurrency: 4
+      # partner visibility
+      result_visibility: 2
   attribution:
     # publisher player args
     publisher:
