@@ -74,7 +74,7 @@ jobs:
       # optional args #
       num_mpc_containers: 2
       num_pid_containers: 2
-      pcs_features: private_lift_pcf2_release
+      pcs_features: [private_lift_pcf2_release]
       concurrency: 4
   attribution:
     # publisher player args
