@@ -35,9 +35,7 @@ private_computation:
       constructor:
         cloudwatch_log_service_args:
           kls: fbpcp.service.log_cloudwatch.CloudWatchLogService
-          args:
-            access_key_id:
-            access_key_data:
+          args: {}
 pid:
   dependency:
   skip_aggregation_step: true
