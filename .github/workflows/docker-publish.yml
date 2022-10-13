@@ -77,10 +77,10 @@ jobs:
       packages: write
 
     steps:
-      - name: Cleanup ECS running tasks and previous running results
-        run: |
-          ./cleanup.sh
-        working-directory: ./fbpcs/tests/github/
+      # - name: Cleanup ECS running tasks and previous running results
+      #   run: |
+      #     ./cleanup.sh
+      #   working-directory: ./fbpcs/tests/github/
 
       - name: Pull coordinator image
         run: |
