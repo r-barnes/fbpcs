@@ -1,7 +1,7 @@
 private_computation:
   dependency:
     PrivateComputationInstanceRepository:
-      class: fbpcs.private_computation.repository.private_computation_instance_local.LocalPrivateComputationInstanceRepository
+      class: fbpcs.private_computation.repository.private_computation_instance_local.LocalPrivateComputationInstanceReposito
       constructor:
         base_dir: /instances
     ContainerService:
