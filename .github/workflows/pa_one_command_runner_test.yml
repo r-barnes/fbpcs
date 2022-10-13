@@ -82,7 +82,7 @@ jobs:
 
   pa_test:
     name: Private Attribution E2E Tests
-    runs-on: [self-hosted, fbpcs-e2e-test-runner]
+    runs-on: ubuntu-20.04
     timeout-minutes: 90
     permissions:
       contents: read
@@ -92,6 +92,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: Print Tracker Hash
         run: echo ${{ inputs.tracker_hash}}
+
+      - name: Set AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_E2E_TEST_ROLE_TO_ASSUME }}
+          aws-region: us-west-2
+          role-duration-seconds: 5400
 
       - name: One Command runner
         run: |
