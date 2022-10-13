@@ -9,6 +9,7 @@ import logging
 from collections import defaultdict
 from typing import Any, DefaultDict, Dict, List, Optional, Type
 
+from fbpcp.service.log_cloudwatch import CloudWatchLogService
 from fbpcp.entity.mpc_instance import MPCInstance
 from fbpcp.repository.mpc_game_repository import MPCGameRepository
 from fbpcp.repository.mpc_instance import MPCInstanceRepository
@@ -378,7 +379,9 @@ def _try_build_log_retriever(
     log_retriever_config: Dict[str, Any]
 ) -> Optional[LogRetriever]:
     if log_retriever_config:
-        return reflect.get_instance(log_retriever_config, LogRetriever)
+        res = reflect.get_instance(log_retriever_config, LogRetriever)
+        res.cloudwatch_log_service_args = {"kls": CloudWatchLogService, "args": {}}
+        return res
     else:
         return None
 

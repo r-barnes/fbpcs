@@ -18,6 +18,7 @@ from fbpcs.common.entity.pcs_container_instance import PCSContainerInstance
 from fbpcs.experimental.cloud_logs.aws_log_retriever import AWSLogRetriever
 from fbpcs.experimental.cloud_logs.log_retriever import LogRetriever
 from fbpcs.private_computation.service.utils import deprecated
+from fbpcp.service.log_cloudwatch import CloudWatchLogService
 
 
 class PCSContainerService(ContainerService):
@@ -31,6 +32,7 @@ class PCSContainerService(ContainerService):
         if not self.log_retriever:
             if isinstance(self.inner_container_service, AWSContainerService):
                 self.log_retriever = AWSLogRetriever()
+                self.log_retriever.cloudwatch_log_service_args = {"kls": CloudWatchLogService, "args": {}}
 
     def get_region(
         self,
