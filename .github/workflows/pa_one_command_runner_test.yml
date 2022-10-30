@@ -27,10 +27,7 @@ on:
       test_name:
         description: The name of the type of tests that are being run
         default: 'PA E2E Tests'
-        type: 'choice'
-        options:
-          - PA E2E Tests
-          - Multi-key PA E2E Tests
+        type: string
       tag:
         description: Version tag to use
         required: true
