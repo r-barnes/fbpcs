@@ -8,33 +8,36 @@ on:
         description: Lift study id
         required: true
         default: 32102205110410
+        type: number
       objective_id:
         description: Lift objective id
         required: true
         default: 23502204952992
+        type: number
       input_path:
         description: S3 path to synthetic data
         required: true
         default: https://fbpcs-github-e2e.s3.us-west-2.amazonaws.com/lift/inputs/partner_e2e_input.csv
+        type: string
       expected_result_path:
         description: S3 path to expected results from synthetic run
         required: true
         default: https://fbpcs-github-e2e.s3.us-west-2.amazonaws.com/lift/results/partner_expected_result.json
+        type: string
       tag:
         description: Version tag to use
         required: true
         default: rc
+        type: string
       build_id:
         description: The build id
         required: false
         default: null
+        type: string
       test_name:
         description: The name of the type of tests that are being run
         default: 'PL E2E Tests'
-        type: 'choice'
-        options:
-          - PL E2E Tests
-          - Multi-key PL E2E Tests
+        type: string
       tracker_hash:
         description: '[Internal usage] Used for tracking workflow job status within Meta infra'
         required: false
@@ -141,3 +144,4 @@ jobs:
           sed -n '/^.* ! Command line: .*/,$p' < ${{env.CONSOLE_OUTPUT_FILE}} > ${{env.CONSOLE_OUTPUT_FILE}}.extracted
           docker run --rm -v "${{env.CONSOLE_OUTPUT_FILE}}.extracted:${{env.CONSOLE_OUTPUT_FILE}}" ${{env.FBPCS_CONTAINER_REPO_URL}}/${{env.FBPCS_IMAGE_NAME}}:${{github.event.inputs.tag}} \
           python -m fbpcs.infra.logging_service.log_analyzer.log_analyzer ${{env.CONSOLE_OUTPUT_FILE}} --validate_one_runner_logs
+
