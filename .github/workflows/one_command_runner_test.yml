@@ -41,7 +41,7 @@ on:
       tracker_hash:
         description: '[Internal usage] Used for tracking workflow job status within Meta infra'
         required: false
-        type: str
+        type: string
 
   workflow_dispatch:
     inputs:
