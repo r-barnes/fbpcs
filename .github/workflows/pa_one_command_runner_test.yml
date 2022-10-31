@@ -98,7 +98,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_E2E_TEST_ROLE_TO_ASSUME }}
           aws-region: us-west-2
-          role-duration-seconds: 5400
+          role-duration-seconds: 3600
 
       - name: One Command runner
         run: |
