@@ -139,12 +139,13 @@ function parse_args() {
         echo "Overriding docker version tag with $image_version"
         ;;
       --docker_env=*)
-        if [[ "$arg" =~ ^([a-zA-Z0-9_]+)$ ]]; then
-          echo "Adding environment variable $arg"
+        env_var_name=${arg#*=}
+        if [[ "$env_var_name" =~ ^([a-zA-Z0-9_]+)$ ]]; then
+          echo "Adding environment variable $env_var_name"
         else
-          env_validation_failure "$arg"
+          env_validation_failure "$env_var_name"
         fi
-        environment_vars+=("-e $arg")
+        environment_vars+=("-e $env_var_name")
         ;;
       *)
         echo >&2 "$arg is not a valid argument"
