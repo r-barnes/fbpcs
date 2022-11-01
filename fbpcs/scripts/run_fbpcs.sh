@@ -170,6 +170,11 @@ function run_fbpcs() {
   fi
   echo "Environment variables ${environment_vars[@]}"
   docker pull "$docker_image"
+  echo "docker run ${environment_vars[@]} --rm \
+    -v $real_config_path:$DOCKER_CONFIG_PATH \
+    -v $REAL_INSTANCE_REPO:$DOCKER_INSTANCE_REPO \
+    -v $REAL_CREDENTIALS_PATH:$DOCKER_CREDENTIALS_PATH \
+    ${docker_image} ${docker_cmd[@]}"
   docker run "${environment_vars[@]}" --rm \
     -v "$real_config_path":"$DOCKER_CONFIG_PATH" \
     -v "$REAL_INSTANCE_REPO":"$DOCKER_INSTANCE_REPO" \
