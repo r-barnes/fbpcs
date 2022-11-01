@@ -95,7 +95,7 @@ function parse_args() {
   fi
 
   docker_cmd=(python3.8 -m fbpcs.private_computation_cli.private_computation_cli)
-  environment_vars=('-e FBPCS_GRAPH_API_TOKEN')
+  environment_vars=(-e FBPCS_GRAPH_API_TOKEN)
 
   # PC-CLI arguments
   for arg in "$@"; do
