@@ -94,7 +94,7 @@ function parse_args() {
     exit 1
   fi
 
-  docker_cmd=(awk 'BEGIN{for(v in ENVIRON) print v}';python3.8 -m fbpcs.private_computation_cli.private_computation_cli)
+  docker_cmd=(python3.8 -m fbpcs.private_computation_cli.private_computation_cli)
   environment_vars=(-e FBPCS_GRAPH_API_TOKEN)
 
   # PC-CLI arguments
@@ -180,7 +180,7 @@ function run_fbpcs() {
     -v "$real_config_path":"$DOCKER_CONFIG_PATH" \
     -v "$REAL_INSTANCE_REPO":"$DOCKER_INSTANCE_REPO" \
     -v "$REAL_CREDENTIALS_PATH":"$DOCKER_CREDENTIALS_PATH" \
-    "${docker_image}" "${docker_cmd[@]}"
+    "${docker_image}" awk 'BEGIN{for(v in ENVIRON) print v}';"${docker_cmd[@]}"
 }
 
 retry_run_fbpcs() {
