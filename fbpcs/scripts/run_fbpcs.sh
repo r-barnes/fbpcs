@@ -169,13 +169,11 @@ function run_fbpcs() {
     aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin "$FBPCS_CONTAINER_REPO_URL"
   fi
   docker pull "$docker_image"
-  set -o xtrace
   docker run "${environment_vars[@]}" --rm \
     -v "$real_config_path":"$DOCKER_CONFIG_PATH" \
     -v "$REAL_INSTANCE_REPO":"$DOCKER_INSTANCE_REPO" \
     -v "$REAL_CREDENTIALS_PATH":"$DOCKER_CREDENTIALS_PATH" \
     "${docker_image}" "${docker_cmd[@]}"
-  set +o xtrace
 }
 
 retry_run_fbpcs() {
