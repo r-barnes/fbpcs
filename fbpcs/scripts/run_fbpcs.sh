@@ -170,17 +170,13 @@ function run_fbpcs() {
   fi
   echo "Environment variables ${environment_vars[@]}"
   docker pull "$docker_image"
-  echo "docker run ${environment_vars[@]} --rm \
-    -v $real_config_path:$DOCKER_CONFIG_PATH \
-    -v $REAL_INSTANCE_REPO:$DOCKER_INSTANCE_REPO \
-    -v $REAL_CREDENTIALS_PATH:$DOCKER_CREDENTIALS_PATH \
-    ${docker_image} ${docker_cmd[@]}"
-  awk 'BEGIN{for(v in ENVIRON) print v}'
-  docker run -e FBPCS_GRAPH_API_TOKEN -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_DEFAULT_REGION --rm \
+  set -o xtrace
+  docker run "${environment_vars[@]}" --rm \
     -v "$real_config_path":"$DOCKER_CONFIG_PATH" \
     -v "$REAL_INSTANCE_REPO":"$DOCKER_INSTANCE_REPO" \
     -v "$REAL_CREDENTIALS_PATH":"$DOCKER_CREDENTIALS_PATH" \
     "${docker_image}" "${docker_cmd[@]}"
+  set +o xtrace
 }
 
 retry_run_fbpcs() {
