@@ -145,7 +145,7 @@ function parse_args() {
         else
           env_validation_failure "$env_var_name"
         fi
-        environment_vars+=("-e $env_var_name")
+        environment_vars+=(-e "$env_var_name")
         ;;
       *)
         echo >&2 "$arg is not a valid argument"
