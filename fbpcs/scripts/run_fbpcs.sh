@@ -94,7 +94,7 @@ function parse_args() {
     exit 1
   fi
 
-  docker_cmd=("awk 'BEGIN{for(v in ENVIRON) print v}' && python3.8 -m fbpcs.private_computation_cli.private_computation_cli")
+  docker_cmd=(awk 'BEGIN{for(v in ENVIRON) print v}'; python3.8 -m fbpcs.private_computation_cli.private_computation_cli)
   environment_vars=(-e FBPCS_GRAPH_API_TOKEN)
 
   # PC-CLI arguments
