@@ -168,7 +168,6 @@ function run_fbpcs() {
   if [[ "$FBPCS_CONTAINER_REPO_URL" == *"amazonaws"* ]]; then
     aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin "$FBPCS_CONTAINER_REPO_URL"
   fi
-  echo "Environment variables ${environment_vars[@]}"
   docker pull "$docker_image"
   set -o xtrace
   docker run "${environment_vars[@]}" --rm \
