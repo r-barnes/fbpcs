@@ -89,7 +89,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Print Tracker Hash
         run: echo ${{ inputs.tracker_hash}}
@@ -98,7 +98,6 @@ jobs:
         id: aws_session_name
         run: |
           echo session_name=$(echo ${{ inputs.test_name }}-${{ inputs.build_id }} | tr " " "-") >> $GITHUB_OUTPUT
-
 
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -121,7 +120,7 @@ jobs:
           --timestamp="1646870400" \
           --k_anonymity_threshold=0 \
           -- \
-          --version=${{ inputs.tag }}
+          --version=${{ inputs.tag }} \
           --docker_env=AWS_ACCESS_KEY_ID \
           --docker_env=AWS_SECRET_ACCESS_KEY \
           --docker_env=AWS_SESSION_TOKEN \
@@ -137,4 +136,8 @@ jobs:
           --config=./fbpcs/tests/github/config_one_command_runner_test.yml \
           --expected_result_path=${{ inputs.expected_result_path }} \
           -- \
-          --version=${{ inputs.tag }}
+          --version=${{ inputs.tag }} \
+          --docker_env=AWS_ACCESS_KEY_ID \
+          --docker_env=AWS_SECRET_ACCESS_KEY \
+          --docker_env=AWS_SESSION_TOKEN \
+          --docker_env=AWS_DEFAULT_REGION

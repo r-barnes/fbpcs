@@ -92,14 +92,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     permissions:
+      id-token: write
       contents: read
-      packages: write
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Print Tracker Hash
-        run: echo ${{ inputs.tracker_hash}}
+        run: echo ${{ inputs.tracker_hash }}
 
       - name: Get AWS Session name
         id: aws_session_name
@@ -124,7 +124,7 @@ jobs:
           --input_paths=${{ inputs.input_path }} \
           --config=./fbpcs/tests/github/config_one_command_runner_test.yml \
           -- \
-          --version=${{ inputs.tag }}
+          --version=${{ inputs.tag }} \
           --docker_env=AWS_ACCESS_KEY_ID \
           --docker_env=AWS_SECRET_ACCESS_KEY \
           --docker_env=AWS_SESSION_TOKEN \
@@ -152,11 +152,16 @@ jobs:
           --config=./fbpcs/tests/github/config_one_command_runner_test.yml \
           --expected_result_path=${{ inputs.expected_result_path }} \
           -- \
-          --version=${{ inputs.tag }}
+          --version=${{ inputs.tag }} \
+          --docker_env=AWS_ACCESS_KEY_ID \
+          --docker_env=AWS_SECRET_ACCESS_KEY \
+          --docker_env=AWS_SESSION_TOKEN \
+          --docker_env=AWS_DEFAULT_REGION
 
       - name: Validate runner logs
         # First command extracts the pc-cli log lines starting with "... ! Command line: ..." into a file.
         run: |
           sed -n '/^.* ! Command line: .*/,$p' < ${{env.CONSOLE_OUTPUT_FILE}} > ${{env.CONSOLE_OUTPUT_FILE}}.extracted
-          docker run --rm -v "${{env.CONSOLE_OUTPUT_FILE}}.extracted:${{env.CONSOLE_OUTPUT_FILE}}" ${{env.FBPCS_CONTAINER_REPO_URL}}/${{env.FBPCS_IMAGE_NAME}}:${{inputs.tag}} \
+          docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_DEFAULT_REGION --rm \
+          -v "${{env.CONSOLE_OUTPUT_FILE}}.extracted:${{env.CONSOLE_OUTPUT_FILE}}" ${{env.FBPCS_CONTAINER_REPO_URL}}/${{env.FBPCS_IMAGE_NAME}}:${{inputs.tag}} \
           python -m fbpcs.infra.logging_service.log_analyzer.log_analyzer ${{env.CONSOLE_OUTPUT_FILE}} --validate_one_runner_logs
