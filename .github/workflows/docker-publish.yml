@@ -84,13 +84,18 @@ jobs:
       - name: Print Tracker Hash
         run: echo ${{ github.event.inputs.tracker_hash }}
 
+      - name: Get AWS Session name
+        id: aws_session_name
+        run: |
+          echo session_name=$(echo publish-onedocker-tests-${{ inputs.new_tag }} | tr " " "-") >> $GITHUB_OUTPUT
+
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.AWS_E2E_TEST_ROLE_TO_ASSUME }}
           aws-region: us-west-2
           role-duration-seconds: 5400
-          role-session-name: publish-onedocker-tests-${{ inputs.new_tag }}
+          role-session-name: ${{ steps.aws_session_name.outputs.session_name }}
 
       - name: Clean Up Docker Images
         run: |
