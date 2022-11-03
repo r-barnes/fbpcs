@@ -107,6 +107,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_E2E_TEST_ROLE_TO_ASSUME }}
           aws-region: us-west-2
           role-duration-seconds: 5400
+          role-session-name: ${{ inputs.test_name }}-${{ inputs.build_id }}
 
       - name: One command runner
         id: runner

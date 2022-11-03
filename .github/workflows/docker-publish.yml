@@ -90,6 +90,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_E2E_TEST_ROLE_TO_ASSUME }}
           aws-region: us-west-2
           role-duration-seconds: 5400
+          role-session-name: publish-onedocker-tests-${{ inputs.new_tag }}
 
       - name: Clean Up Docker Images
         run: |
