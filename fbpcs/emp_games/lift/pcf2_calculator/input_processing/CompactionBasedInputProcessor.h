@@ -44,11 +44,17 @@ class CompactionBasedInputProcessor : public IInputProcessor<schedulerId> {
         inputData_{inputData},
         numConversionsPerUser_{numConversionsPerUser} {
     if (inputData.getNumRows() == 0) {
-      throw std::invalid_argument("Tried to process dataset with no rows");
+      liftGameProcessedData_ = {};
+      return;
     }
 
     auto unionMap = shuffleAndGetUnionMap();
     auto intersectionMap = getIntersectionMap(unionMap);
+
+    if (intersectionMap.size() == 0) {
+      liftGameProcessedData_ = {};
+      return;
+    }
 
     auto plaintextData = preparePlaintextData(unionMap);
 
