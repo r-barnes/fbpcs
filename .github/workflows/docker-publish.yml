@@ -6,8 +6,12 @@ on:
       name:
         description: 'Manually running this workflow will skip "Check New Commits" step and build image directly'
         default: "Run"
-      new_tag:
-        description: "The new tag of the docker image"
+      onedocker_new_tag:
+        description: "The new tag to be applied to the OneDocker image that is built"
+        required: true
+        type: string
+      coordinator_tag:
+        description: "The coordinator image tag to pull"
         required: false
         type: string
         default: latest-build
@@ -33,7 +37,7 @@ jobs:
   ### Build and publish rc/onedocker image
   build_image:
     name: Build Onedocker, MPC Games and Data Processing Images
-    runs-on: [self-hosted, fbpcs-build]
+    runs-on: ubuntu-20.04
     permissions:
       contents: read
       packages: write
@@ -50,7 +54,7 @@ jobs:
 
       - name: Build onedocker image in rc
         run: |
-          ./build-docker.sh onedocker -t ${{github.event.inputs.new_tag}} -f -p linux/amd64 -v ${{ env.FBPCF_VERSION }} -i ${{ env.PID_VERSION }}
+          ./build-docker.sh onedocker -t ${{github.event.inputs.onedocker_new_tag}} -f -p linux/amd64 -v ${{ env.FBPCF_VERSION }} -i ${{ env.PID_VERSION }}
 
       - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v1
@@ -61,12 +65,12 @@ jobs:
 
       - name: Tag docker image
         run: |
-          docker tag ${{ env.LOCAL_IMAGE_NAME }}:${{github.event.inputs.new_tag}} ${{ env.RC_REGISTRY_IMAGE_NAME }}:${{ github.sha }}
-          docker tag ${{ env.LOCAL_IMAGE_NAME }}:${{github.event.inputs.new_tag}} ${{ env.RC_REGISTRY_IMAGE_NAME }}:${{github.event.inputs.new_tag}}
+          docker tag ${{ env.LOCAL_IMAGE_NAME }}:${{github.event.inputs.onedocker_new_tag}} ${{ env.RC_REGISTRY_IMAGE_NAME }}:${{ github.sha }}
+          docker tag ${{ env.LOCAL_IMAGE_NAME }}:${{github.event.inputs.onedocker_new_tag}} ${{ env.RC_REGISTRY_IMAGE_NAME }}:${{github.event.inputs.onedocker_new_tag}}
           # temporarily tagging with rc because the task definition
           # (fbpcs-github-cicd:4 https://us-west-2.console.aws.amazon.com/ecs/home?region=us-west-2#/taskDefinitions/fbpcs-github-cicd/4)
           # points at :rc instead of latest-build
-          docker tag ${{ env.LOCAL_IMAGE_NAME }}:${{github.event.inputs.new_tag}} ${{ env.RC_REGISTRY_IMAGE_NAME }}:rc
+          docker tag ${{ env.LOCAL_IMAGE_NAME }}:${{github.event.inputs.onedocker_new_tag}} ${{ env.RC_REGISTRY_IMAGE_NAME }}:rc
 
       - name: Push image to rc registry
         run: |
@@ -90,7 +94,7 @@ jobs:
 
       - name: Pull coordinator image
         run: |
-          docker pull ${{ env.COORDINATOR_IMAGE }}:${{ github.event.inputs.new_tag }}
+          docker pull ${{ env.COORDINATOR_IMAGE }}:${{ github.event.inputs.coordinator_tag }}
 
       ### Private Lift and Attribution E2E tests
       - name: End to end testing
@@ -110,7 +114,7 @@ jobs:
       - name: Tag image
         run: |
           docker tag ${{ env.RC_REGISTRY_IMAGE_NAME }}:${{ github.sha }} ${{ env.PROD_REGISTRY_IMAGE_NAME }}:${{ github.sha }}
-          docker tag ${{ env.RC_REGISTRY_IMAGE_NAME }}:${{ github.sha }} ${{ env.PROD_REGISTRY_IMAGE_NAME }}:${{github.event.inputs.new_tag}}
+          docker tag ${{ env.RC_REGISTRY_IMAGE_NAME }}:${{ github.sha }} ${{ env.PROD_REGISTRY_IMAGE_NAME }}:${{github.event.inputs.onedocker_new_tag}}
           docker tag ${{ env.RC_REGISTRY_IMAGE_NAME }}:${{ github.sha }} ${{ env.PROD_REGISTRY_IMAGE_NAME }}:${{ steps.vars.outputs.ref }}
 
       - name: Log into registry ${{ env.REGISTRY }}
