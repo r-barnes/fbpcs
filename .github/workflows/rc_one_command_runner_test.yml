@@ -42,7 +42,7 @@ jobs:
   ### Private Lift E2E tests
   pl_test:
     name: Private Lift RC E2E Tests
-    runs-on: [self-hosted, fbpcs-e2e-test-runner]
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
       contents: read
@@ -57,7 +57,7 @@ jobs:
       - name: Get AWS Session name
         id: aws_session_name
         run: |
-          echo session_name=$(echo ${{ inputs.test_name }}-${{ inputs.build_id }} | tr " " "-") >> $GITHUB_OUTPUT
+          echo session_name=$(echo PL-RC-E2E-Tests-${{ inputs.build_id }} | tr " " "-") >> $GITHUB_OUTPUT
 
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
